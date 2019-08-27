@@ -1,12 +1,13 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-
 import {
   Platform,
   StyleSheet,
   Text,
+  Image,
   TouchableHighlight,
+  Dimensions,
   TouchableNativeFeedback,
   View,
 } from 'react-native';
@@ -24,6 +25,10 @@ function MenuItem({
   onPress,
   style,
   textStyle,
+  checkedIcon,
+  uncheckedIcon,
+  selectedItem,
+  withCheckBoxes,
   ...props
 }) {
   const touchableProps =
@@ -50,6 +55,9 @@ function MenuItem({
         >
           {children}
         </Text>
+        {withCheckBoxes && selectedItem ?
+              <Image source={checkedIcon} style={{ height: 15, width: 15 }} /> :
+              <Image source={uncheckedIcon} style={{ height: 15, width: 15 }} />}
       </View>
     </Touchable>
   );
@@ -68,6 +76,8 @@ MenuItem.propTypes = {
 
 MenuItem.defaultProps = {
   disabled: false,
+  withCheckBoxes: false,
+  selectedItem: false,
   disabledTextColor: '#bdbdbd',
   ellipsizeMode: Platform.OS === 'ios' ? 'clip' : 'tail',
   underlayColor: '#e0e0e0',
@@ -75,16 +85,18 @@ MenuItem.defaultProps = {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     height: 48,
-    justifyContent: 'center',
-    maxWidth: 248,
-    minWidth: 124,
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    justifyContent: 'space-between',
+    maxWidth: Dimensions.get('screen').width * 0.85,
+    minWidth: Dimensions.get('screen').width * 0.3,
   },
   title: {
     fontSize: 14,
     fontWeight: '400',
-    paddingHorizontal: 16,
-    textAlign: 'left',
+    paddingRight: 10,
   },
 });
 

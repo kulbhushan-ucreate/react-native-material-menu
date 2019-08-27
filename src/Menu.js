@@ -13,7 +13,6 @@ import {
   TouchableWithoutFeedback,
   View,
   ViewPropTypes,
-  I18nManager,
 } from 'react-native';
 
 const STATES = {
@@ -130,8 +129,6 @@ class Menu extends React.Component {
   };
 
   render() {
-    const { isRTL } = I18nManager;
-
     const dimensions = Dimensions.get('window');
     const { width: windowWidth } = dimensions;
     const windowHeight = dimensions.height - (StatusBar.currentHeight || 0);
@@ -153,10 +150,8 @@ class Menu extends React.Component {
     let { left, top } = this.state;
     const transforms = [];
 
-    if (
-      (isRTL && left + buttonWidth - menuWidth > SCREEN_INDENT) ||
-      (!isRTL && left + menuWidth > windowWidth - SCREEN_INDENT)
-    ) {
+    // Flip by X axis if menu hits right screen border
+    if (left > windowWidth - menuWidth - SCREEN_INDENT) {
       transforms.push({
         translateX: Animated.multiply(menuSizeAnimation.x, -1),
       });
@@ -181,10 +176,8 @@ class Menu extends React.Component {
     const shadowMenuContainerStyle = {
       opacity: opacityAnimation,
       transform: transforms,
+      left,
       top,
-
-      // Switch left to right for rtl devices
-      ...(isRTL ? { right: left } : { left }),
     };
 
     const { menuState } = this.state;
